@@ -14,12 +14,10 @@ from homeassistant.data_entry_flow import FlowResult
 
 from .const import DOMAIN
 
-
-class GoveeConfigFlow(ConfigFlow, domain=DOMAIN):
+class RGBPCConfigFlow(ConfigFlow, domain=DOMAIN):
     VERSION = 1
 
     def __init__(self) -> None:
-        """Initialize the config flow."""
         self._discovery_info: None = None
         self._discovered_device: None = None
         self._discovered_devices: dict[str, str] = {}
@@ -27,7 +25,6 @@ class GoveeConfigFlow(ConfigFlow, domain=DOMAIN):
     async def async_step_bluetooth(
         self, discovery_info: BluetoothServiceInfoBleak
     ) -> FlowResult:
-        """Handle the bluetooth discovery step."""
         await self.async_set_unique_id(discovery_info.address)
         self._abort_if_unique_id_configured()
         self._discovery_info = discovery_info
@@ -36,7 +33,6 @@ class GoveeConfigFlow(ConfigFlow, domain=DOMAIN):
     async def async_step_bluetooth_confirm(
         self, user_input: dict[str, Any] | None = None
     ) -> FlowResult:
-        """Confirm discovery."""
         assert self._discovery_info is not None
         discovery_info = self._discovery_info
         title = discovery_info.name
@@ -53,7 +49,6 @@ class GoveeConfigFlow(ConfigFlow, domain=DOMAIN):
     async def async_step_user(
         self, user_input: dict[str, Any] | None = None
     ) -> FlowResult:
-        """Handle the user step to pick discovered device."""
         if user_input is not None:
             address = user_input[CONF_ADDRESS]
             await self.async_set_unique_id(address, raise_on_progress=False)
